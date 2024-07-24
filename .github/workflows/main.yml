@@ -16,7 +16,7 @@ jobs:
       - name: Set Java 11
         uses: actions/setup-java@v3
         with:
-          distribution: "temurin" # See 'Supported distributions' for available options
+          distribution: "temurin"
           java-version: "11"
 
       - name: Maven test
@@ -39,7 +39,8 @@ jobs:
           -Dsonar.junit.reportsPath=target/surefire-reports/ \
           -Dsonar.jacoco.reportsPath=target/jacoco.exec \
           -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml \
-          -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/
+          -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+          -X
 
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
@@ -47,7 +48,7 @@ jobs:
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }} # OPTIONAL
+          SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
 
   BUILD_AND_PUBLISH:
     needs: Testing
@@ -55,7 +56,6 @@ jobs:
     steps:
       - name: Code checkout
         uses: actions/checkout@v4
-        # using docker ECR actions
 
       - name: Build & Upload image to ECR
         uses: appleboy/docker-ecr-action@master
